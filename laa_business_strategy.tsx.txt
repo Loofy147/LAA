@@ -1,0 +1,930 @@
+import React, { useState } from 'react';
+import { Building2, TrendingUp, Target, AlertCircle, CheckCircle, DollarSign, Users, Zap, Shield, Code, Database, Cloud } from 'lucide-react';
+
+const BusinessStrategyDashboard = () => {
+  const [selectedTab, setSelectedTab] = useState('overview');
+
+  const marketData = {
+    cloudComputing: { size: 752.4, growth: 20.4, target: 2390.18, year: 2030 },
+    algoTrading: { size: 17.0, growth: 15.9, target: 65.2, year: 2032 },
+    predictiveAI: { size: 831.5, growth: 17.3, target: 4100.6, year: 2034 }
+  };
+
+  const tabs = [
+    { id: 'overview', label: 'Market Overview', icon: TrendingUp },
+    { id: 'gaps', label: 'Gap Analysis', icon: Target },
+    { id: 'products', label: 'Product Suite', icon: Building2 },
+    { id: 'gtm', label: 'Go-to-Market', icon: Users },
+    { id: 'technical', label: 'Technical Stack', icon: Code },
+    { id: 'roadmap', label: 'Execution Roadmap', icon: CheckCircle }
+  ];
+
+  const renderOverview = () => (
+    <div className="space-y-6">
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 rounded-lg text-white">
+        <h2 className="text-2xl font-bold mb-2">Learning-Augmented Algorithms Business Opportunity</h2>
+        <p className="text-blue-100">Bridging the $3.2 trillion gap between theoretical CS and practical ML deployment</p>
+      </div>
+
+      <div className="grid md:grid-cols-3 gap-4">
+        <div className="bg-white p-4 rounded-lg border-2 border-blue-200">
+          <div className="flex items-center gap-2 mb-2">
+            <Cloud className="text-blue-600" size={24} />
+            <h3 className="font-semibold">Cloud Computing</h3>
+          </div>
+          <p className="text-3xl font-bold text-blue-600">${marketData.cloudComputing.size}B</p>
+          <p className="text-sm text-gray-600">2024 Market Size</p>
+          <p className="text-xs text-green-600 mt-1">CAGR: {marketData.cloudComputing.growth}%</p>
+          <p className="text-xs text-gray-500">Resource mgmt: 34% of spending</p>
+        </div>
+
+        <div className="bg-white p-4 rounded-lg border-2 border-green-200">
+          <div className="flex items-center gap-2 mb-2">
+            <TrendingUp className="text-green-600" size={24} />
+            <h3 className="font-semibold">Algorithmic Trading</h3>
+          </div>
+          <p className="text-3xl font-bold text-green-600">${marketData.algoTrading.size}B</p>
+          <p className="text-sm text-gray-600">2023 Market Size</p>
+          <p className="text-xs text-green-600 mt-1">CAGR: {marketData.algoTrading.growth}%</p>
+          <p className="text-xs text-gray-500">60-73% of US equity trading</p>
+        </div>
+
+        <div className="bg-white p-4 rounded-lg border-2 border-purple-200">
+          <div className="flex items-center gap-2 mb-2">
+            <Database className="text-purple-600" size={24} />
+            <h3 className="font-semibold">Predictive AI</h3>
+          </div>
+          <p className="text-3xl font-bold text-purple-600">${marketData.predictiveAI.size}M</p>
+          <p className="text-sm text-gray-600">2024 Market Size</p>
+          <p className="text-xs text-green-600 mt-1">CAGR: {marketData.predictiveAI.growth}%</p>
+          <p className="text-xs text-gray-500">Algorithmic trading: 36.2%</p>
+        </div>
+      </div>
+
+      <div className="bg-amber-50 border-l-4 border-amber-500 p-4">
+        <div className="flex items-start gap-2">
+          <AlertCircle className="text-amber-600 mt-1" size={20} />
+          <div>
+            <h4 className="font-semibold text-amber-900">Core Insight</h4>
+            <p className="text-sm text-amber-800">
+              Organizations spend $100M+ annually on ML predictions but lack frameworks to integrate them into algorithms with worst-case guarantees. Learning-augmented algorithms solve this with consistency, robustness, and smoothness properties.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="bg-white p-5 rounded-lg border">
+          <h3 className="font-bold text-lg mb-3">Market Drivers</h3>
+          <ul className="space-y-2 text-sm">
+            <li className="flex items-start gap-2">
+              <CheckCircle className="text-green-500 mt-0.5" size={16} />
+              <span><strong>AI Integration:</strong> 82% of companies using cloud for AI/ML projects</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <CheckCircle className="text-green-500 mt-0.5" size={16} />
+              <span><strong>HFT Expansion:</strong> Millisecond advantages worth millions in trading</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <CheckCircle className="text-green-500 mt-0.5" size={16} />
+              <span><strong>Resource Costs:</strong> Cloud resource management is 34% of spending</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <CheckCircle className="text-green-500 mt-0.5" size={16} />
+              <span><strong>Alternative Data:</strong> Growing 50.6% annually through 2030</span>
+            </li>
+          </ul>
+        </div>
+
+        <div className="bg-white p-5 rounded-lg border">
+          <h3 className="font-bold text-lg mb-3">Competitive Landscape</h3>
+          <ul className="space-y-2 text-sm">
+            <li className="flex items-start gap-2">
+              <AlertCircle className="text-blue-500 mt-0.5" size={16} />
+              <span><strong>Academic Research:</strong> TTIC, MIT, CMU leading theory (not commercialized)</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <AlertCircle className="text-blue-500 mt-0.5" size={16} />
+              <span><strong>Cloud Providers:</strong> AWS/Azure/GCP offer ML but not LAA frameworks</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <AlertCircle className="text-blue-500 mt-0.5" size={16} />
+              <span><strong>Trading Firms:</strong> Build proprietary systems, no platform exists</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <AlertCircle className="text-blue-500 mt-0.5" size={16} />
+              <span><strong>Gap:</strong> No commercial LAA platform bridges theory to practice</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderGaps = () => (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold">Critical Market Gaps & Opportunities</h2>
+      
+      <div className="grid md:grid-cols-2 gap-4">
+        <div className="bg-red-50 p-5 rounded-lg border-2 border-red-300">
+          <div className="flex items-center gap-2 mb-3">
+            <AlertCircle className="text-red-600" size={24} />
+            <h3 className="font-bold text-lg">Gap #1: Theory-Practice Chasm</h3>
+          </div>
+          <p className="text-sm text-gray-700 mb-3">
+            Breakthrough research (2024-2025) on brittleness, multiple tradeoffs, and UQ predictions remains in academic papers. No commercial implementation exists.
+          </p>
+          <div className="bg-white p-3 rounded">
+            <p className="text-xs font-semibold mb-1">Opportunity Size:</p>
+            <p className="text-2xl font-bold text-red-600">$2.5B</p>
+            <p className="text-xs text-gray-600">Addressable in cloud resource optimization alone</p>
+          </div>
+        </div>
+
+        <div className="bg-orange-50 p-5 rounded-lg border-2 border-orange-300">
+          <div className="flex items-center gap-2 mb-3">
+            <Shield className="text-orange-600" size={24} />
+            <h3 className="font-bold text-lg">Gap #2: No Robustness Guarantees</h3>
+          </div>
+          <p className="text-sm text-gray-700 mb-3">
+            ML models fail catastrophically with bad predictions. Organizations cannot trust ML for critical systems without fallback guarantees.
+          </p>
+          <div className="bg-white p-3 rounded">
+            <p className="text-xs font-semibold mb-1">Pain Point:</p>
+            <p className="text-sm">85% of ML projects fail in production due to prediction quality issues</p>
+          </div>
+        </div>
+
+        <div className="bg-yellow-50 p-5 rounded-lg border-2 border-yellow-300">
+          <div className="flex items-center gap-2 mb-3">
+            <Zap className="text-yellow-600" size={24} />
+            <h3 className="font-bold text-lg">Gap #3: Brittleness Problem</h3>
+          </div>
+          <p className="text-sm text-gray-700 mb-3">
+            Existing algorithms degrade from optimal to worst-case with tiny prediction errors. 2024 research identifies this but offers no tooling.
+          </p>
+          <div className="bg-white p-3 rounded">
+            <p className="text-xs font-semibold mb-1">Impact:</p>
+            <p className="text-sm">Trading firms lose millions when algorithms suddenly hit robustness bounds</p>
+          </div>
+        </div>
+
+        <div className="bg-blue-50 p-5 rounded-lg border-2 border-blue-300">
+          <div className="flex items-center gap-2 mb-3">
+            <Database className="text-blue-600" size={24} />
+            <h3 className="font-bold text-lg">Gap #4: No UQ Integration</h3>
+          </div>
+          <p className="text-sm text-gray-700 mb-3">
+            Uncertainty-quantified predictions (conformal inference) are cutting-edge but no LAA platform leverages them for better decisions.
+          </p>
+          <div className="bg-white p-3 rounded">
+            <p className="text-xs font-semibold mb-1">Competitive Edge:</p>
+            <p className="text-sm">First-mover in UQ-aware LAA captures early adopters in finance & cloud</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-lg border-2 border-green-300">
+        <h3 className="font-bold text-xl mb-4">Our Strategic Advantages</h3>
+        <div className="grid md:grid-cols-3 gap-4">
+          <div>
+            <h4 className="font-semibold text-green-800 mb-2">First Mover</h4>
+            <p className="text-sm">No commercial LAA platform exists. We translate 2024-2025 breakthroughs before competitors.</p>
+          </div>
+          <div>
+            <h4 className="font-semibold text-green-800 mb-2">Academic Moat</h4>
+            <p className="text-sm">Partner with TTIC/MIT/CMU researchers for IP and exclusive algorithm access.</p>
+          </div>
+          <div>
+            <h4 className="font-semibold text-green-800 mb-2">High Barriers</h4>
+            <p className="text-sm">Requires deep expertise in CS theory + ML + domain knowledge. Few can replicate.</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-purple-50 p-5 rounded-lg border">
+        <h3 className="font-bold text-lg mb-3">Underserved Segments</h3>
+        <div className="space-y-3">
+          <div className="flex items-start gap-3">
+            <div className="bg-purple-200 p-2 rounded">1</div>
+            <div>
+              <h4 className="font-semibold">Mid-Market Hedge Funds ($500M-$5B AUM)</h4>
+              <p className="text-sm text-gray-700">Cannot afford custom LAA development but need competitive edge. Willing to pay $500K-$2M annually for platform.</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <div className="bg-purple-200 p-2 rounded">2</div>
+            <div>
+              <h4 className="font-semibold">Cloud FinOps Teams</h4>
+              <p className="text-sm text-gray-700">Managing $10M-$100M+ cloud spend with primitive tools. LAA could save 15-30% through optimal resource allocation.</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <div className="bg-purple-200 p-2 rounded">3</div>
+            <div>
+              <h4 className="font-semibold">CDN/Edge Computing Providers</h4>
+              <p className="text-sm text-gray-700">Caching and content delivery are perfect LAA use cases. Cloudflare, Fastly, Akamai need better prediction-aware algorithms.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderProducts = () => (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold">Product Suite: Three-Tier Strategy</h2>
+
+      <div className="space-y-4">
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-6 rounded-lg text-white">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-xl font-bold">Tier 1: LAA Platform (PaaS)</h3>
+            <span className="bg-white text-blue-600 px-3 py-1 rounded-full text-sm font-semibold">Core Product</span>
+          </div>
+          <p className="mb-4">API-first platform providing LAA primitives with consistency, robustness, and smoothness guarantees</p>
+          
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="bg-blue-700 bg-opacity-50 p-4 rounded">
+              <h4 className="font-semibold mb-2">Core Capabilities</h4>
+              <ul className="text-sm space-y-1">
+                <li>• Pre-built LAA algorithms (caching, scheduling, trading)</li>
+                <li>• UQ-aware prediction integration (conformal inference)</li>
+                <li>• Trust parameter auto-tuning via RL</li>
+                <li>• Brittleness detection and mitigation</li>
+                <li>• Multi-objective tradeoff optimization</li>
+                <li>• Real-time performance monitoring</li>
+              </ul>
+            </div>
+            <div className="bg-blue-700 bg-opacity-50 p-4 rounded">
+              <h4 className="font-semibold mb-2">Pricing Model</h4>
+              <ul className="text-sm space-y-1">
+                <li><strong>Starter:</strong> $5K/month (1M API calls)</li>
+                <li><strong>Growth:</strong> $25K/month (10M calls + support)</li>
+                <li><strong>Enterprise:</strong> $100K+/month (unlimited + SLA)</li>
+                <li><strong>Revenue Target:</strong> $50M ARR by Year 3</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-r from-green-500 to-green-600 p-6 rounded-lg text-white">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-xl font-bold">Tier 2: Vertical Solutions</h3>
+            <span className="bg-white text-green-600 px-3 py-1 rounded-full text-sm font-semibold">High Margin</span>
+          </div>
+          <p className="mb-4">Domain-specific implementations with pre-configured workflows</p>
+          
+          <div className="grid md:grid-cols-3 gap-3">
+            <div className="bg-green-700 bg-opacity-50 p-4 rounded">
+              <h4 className="font-semibold mb-2">CloudOpt AI</h4>
+              <p className="text-sm mb-2">Cloud resource management with LAA</p>
+              <ul className="text-xs space-y-1">
+                <li>→ Predictive autoscaling</li>
+                <li>→ Spot instance bidding</li>
+                <li>→ Multi-cloud orchestration</li>
+                <li><strong>Price:</strong> % of savings (15-25% of cloud bill reduction)</li>
+              </ul>
+            </div>
+            <div className="bg-green-700 bg-opacity-50 p-4 rounded">
+              <h4 className="font-semibold mb-2">TradeGuard LAA</h4>
+              <p className="text-sm mb-2">Algorithmic trading with robustness</p>
+              <ul className="text-xs space-y-1">
+                <li>→ One-way trading optimizer</li>
+                <li>→ Portfolio rebalancing</li>
+                <li>→ Risk-adjusted execution</li>
+                <li><strong>Price:</strong> $250K-$1M/year + % of alpha</li>
+              </ul>
+            </div>
+            <div className="bg-green-700 bg-opacity-50 p-4 rounded">
+              <h4 className="font-semibold mb-2">CacheFlow Pro</h4>
+              <p className="text-sm mb-2">CDN & edge caching optimization</p>
+              <ul className="text-xs space-y-1">
+                <li>→ Predictive cache warming</li>
+                <li>→ Eviction policy tuning</li>
+                <li>→ Geographic optimization</li>
+                <li><strong>Price:</strong> $50K-$200K/year per region</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-r from-purple-500 to-purple-600 p-6 rounded-lg text-white">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-xl font-bold">Tier 3: Consulting & Custom Development</h3>
+            <span className="bg-white text-purple-600 px-3 py-1 rounded-full text-sm font-semibold">Premium</span>
+          </div>
+          <p className="mb-4">White-glove service for enterprises with unique requirements</p>
+          
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="bg-purple-700 bg-opacity-50 p-4 rounded">
+              <h4 className="font-semibold mb-2">Service Offerings</h4>
+              <ul className="text-sm space-y-1">
+                <li>• Custom LAA algorithm design</li>
+                <li>• Integration with existing ML pipelines</li>
+                <li>• Training & knowledge transfer</li>
+                <li>• Ongoing optimization & tuning</li>
+              </ul>
+            </div>
+            <div className="bg-purple-700 bg-opacity-50 p-4 rounded">
+              <h4 className="font-semibold mb-2">Target Clients & Pricing</h4>
+              <ul className="text-sm space-y-1">
+                <li>Large hedge funds: $2M-$5M/project</li>
+                <li>Cloud hyperscalers: $5M-$10M/year</li>
+                <li>Fortune 500: $1M-$3M/engagement</li>
+                <li><strong>Target:</strong> 5-10 clients, $20M+ annual revenue</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-gray-50 p-5 rounded-lg border">
+        <h3 className="font-bold text-lg mb-3">Revenue Projections (5-Year)</h3>
+        <div className="grid grid-cols-5 gap-2 text-center text-sm">
+          <div className="font-semibold">Product</div>
+          <div className="font-semibold">Year 1</div>
+          <div className="font-semibold">Year 2</div>
+          <div className="font-semibold">Year 3</div>
+          <div className="font-semibold">Year 5</div>
+          
+          <div className="text-left">Platform</div>
+          <div>$2M</div>
+          <div>$10M</div>
+          <div>$50M</div>
+          <div>$200M</div>
+          
+          <div className="text-left">Verticals</div>
+          <div>$1M</div>
+          <div>$8M</div>
+          <div>$30M</div>
+          <div>$150M</div>
+          
+          <div className="text-left">Consulting</div>
+          <div>$3M</div>
+          <div>$10M</div>
+          <div>$20M</div>
+          <div>$50M</div>
+          
+          <div className="text-left font-bold">Total ARR</div>
+          <div className="font-bold">$6M</div>
+          <div className="font-bold">$28M</div>
+          <div className="font-bold">$100M</div>
+          <div className="font-bold">$400M</div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderGTM = () => (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold">Go-to-Market Strategy</h2>
+
+      <div className="grid md:grid-cols-3 gap-4">
+        <div className="bg-blue-50 p-5 rounded-lg border-2 border-blue-300">
+          <h3 className="font-bold text-lg mb-3">Phase 1: Beachhead (Months 1-12)</h3>
+          <div className="space-y-2 text-sm">
+            <div className="bg-white p-3 rounded">
+              <h4 className="font-semibold mb-1">Target: Algorithmic Trading Boutiques</h4>
+              <p className="text-xs">5-10 pilot customers, $500K-$1M ACV each</p>
+            </div>
+            <div>
+              <p className="font-semibold mb-1">Tactics:</p>
+              <ul className="space-y-1 text-xs">
+                <li>• Partner with quantitative finance conferences</li>
+                <li>• Publish papers at STOC/FOCS/NeurIPS</li>
+                <li>• Offer free POC to tier-2 hedge funds</li>
+                <li>• LinkedIn outreach to quant researchers</li>
+              </ul>
+            </div>
+            <div className="bg-green-100 p-2 rounded text-xs">
+              <strong>Success Metric:</strong> 10 paid pilots, $5M ARR
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-green-50 p-5 rounded-lg border-2 border-green-300">
+          <h3 className="font-bold text-lg mb-3">Phase 2: Expansion (Year 2)</h3>
+          <div className="space-y-2 text-sm">
+            <div className="bg-white p-3 rounded">
+              <h4 className="font-semibold mb-1">Target: Cloud FinOps + CDN Providers</h4>
+              <p className="text-xs">Expand into adjacent markets with proven tech</p>
+            </div>
+            <div>
+              <p className="font-semibold mb-1">Tactics:</p>
+              <ul className="space-y-1 text-xs">
+                <li>• AWS/Azure marketplace listings</li>
+                <li>• Case studies showing 20%+ cost savings</li>
+                <li>• Partner with FinOps Foundation</li>
+                <li>• Attend re:Invent, Azure Summit</li>
+              </ul>
+            </div>
+            <div className="bg-green-100 p-2 rounded text-xs">
+              <strong>Success Metric:</strong> 50 customers, $30M ARR
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-purple-50 p-5 rounded-lg border-2 border-purple-300">
+          <h3 className="font-bold text-lg mb-3">Phase 3: Scale (Years 3-5)</h3>
+          <div className="space-y-2 text-sm">
+            <div className="bg-white p-3 rounded">
+              <h4 className="font-semibold mb-1">Target: Platform PLG + Enterprise</h4>
+              <p className="text-xs">Self-serve platform + strategic accounts</p>
+            </div>
+            <div>
+              <p className="font-semibold mb-1">Tactics:</p>
+              <ul className="space-y-1 text-xs">
+                <li>• Free tier with credit card required</li>
+                <li>• Developer community & hackathons</li>
+                <li>• Enterprise sales team (10-20 AEs)</li>
+                <li>• Strategic partnerships with hyperscalers</li>
+              </ul>
+            </div>
+            <div className="bg-green-100 p-2 rounded text-xs">
+              <strong>Success Metric:</strong> 500+ customers, $100M+ ARR
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white p-5 rounded-lg border">
+        <h3 className="font-bold text-lg mb-4">Customer Acquisition Funnel</h3>
+        <div className="space-y-3">
+          <div className="flex items-center gap-3">
+            <div className="w-32 text-sm font-semibold">Awareness</div>
+            <div className="flex-1 bg-blue-200 h-8 rounded flex items-center px-3 text-sm">
+              Academic papers, conferences, LinkedIn → 10K impressions/month
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="w-32 text-sm font-semibold">Interest</div>
+            <div className="flex-1 bg-blue-300 h-8 rounded flex items-center px-3 text-sm">
+              Webinars, whitepapers, ROI calculator → 500 MQLs/month
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="w-32 text-sm font-semibold">Evaluation</div>
+            <div className="flex-1 bg-blue-400 h-8 rounded flex items-center px-3 text-sm">
+              Free POC, technical demos → 50 SQLs/month
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="w-32 text-sm font-semibold">Purchase</div>
+            <div className="flex-1 bg-blue-500 h-8 rounded flex items-center px-3 text-sm text-white">
+              Pilot → Production → 10-15 conversions/month (20-30% close rate)
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-4">
+        <div className="bg-amber-50 p-5 rounded-lg border">
+          <h3 className="font-bold mb-3">Pricing Psychology</h3>
+          <ul className="space-y-2 text-sm">
+            <li className="flex items-start gap-2">
+              <CheckCircle className="text-green-600 mt-0.5" size={16} />
+              <span><strong>Value-based:</strong> Charge % of savings/alpha, not fixed fees</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <CheckCircle className="text-green-600 mt-0.5" size={16} />
+              <span><strong>Land & expand:</strong> Start with one use case, grow to platform</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <CheckCircle className="text-green-600 mt-0.5" size={16} />
+              <span><strong>Free POC:</strong> 30-day trial removes risk, high conversion</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <CheckCircle className="text-green-600 mt-0.5" size={16} />
+              <span><strong>Annual contracts:</strong> 15% discount for yearly commit</span>
+            </li>
+          </ul>
+        </div>
+
+        <div className="bg-emerald-50 p-5 rounded-lg border">
+          <h3 className="font-bold mb-3">Competitive Positioning</h3>
+          <div className="space-y-2 text-sm">
+            <div className="bg-white p-2 rounded">
+              <strong>vs. Building In-House:</strong> 10x faster to production, proven algorithms
+            </div>
+            <div className="bg-white p-2 rounded">
+              <strong>vs. Traditional ML:</strong> Worst-case guarantees + consistency
+            </div>
+            <div className="bg-white p-2 rounded">
+              <strong>vs. Classical Algorithms:</strong> 2-5x better average performance
+            </div>
+            <div className="bg-white p-2 rounded">
+              <strong>vs. Consulting Firms:</strong> Platform scales, consultants don't
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderTechnical = () => (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold">Technical Architecture & Stack</h2>
+
+      <div className="bg-gradient-to-r from-slate-700 to-slate-800 p-6 rounded-lg text-white">
+        <h3 className="text-xl font-bold mb-4">System Architecture</h3>
+        <div className="grid md:grid-cols-3 gap-4 text-sm">
+          <div className="bg-slate-600 bg-opacity-50 p-4 rounded">
+            <h4 className="font-semibold mb-2">Layer 1: Core Engine</h4>
+            <ul className="space-y-1 text-xs">
+              <li>• LAA algorithm library (Rust)</li>
+              <li>• Performance optimizer</li>
+              <li>• Tradeoff solver</li>
+              <li>• Brittleness detector</li>
+            </ul>
+          </div>
+          <div className="bg-slate-600 bg-opacity-50 p-4 rounded">
+            <h4 className="font-semibold mb-2">Layer 2: ML Integration</h4>
+            <ul className="space-y-1 text-xs">
+              <li>• UQ prediction adapter</li>
+              <li>• Conformal inference</li>
+              <li>• Trust parameter RL</li>
+              <li>• Multi-model ensemble</li>
+            </ul>
+          </div>
+          <div className="bg-slate-600 bg-opacity-50 p-4 rounded">
+            <h4 className="font-semibold mb-2">Layer 3: API & Platform</h4>
+            <ul className="space-y-1 text-xs">
+              <li>• REST/gRPC APIs</li>
+              <li>• Real-time monitoring</li>
+              <li>• A/B testing framework</li>
+              <li>• Client SDKs (Python/JS)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-4">
+        <div className="bg-white p-5 rounded-lg border">
+          <h3 className="font-bold text-lg mb-3">Technology Stack</h3>
+          <div className="space-y-3 text-sm">
+            <div>
+              <h4 className="font-semibold text-blue-700">Core Algorithms</h4>
+              <p className="text-xs">Rust (performance), Python bindings (accessibility)</p>
+            </div>
+            <div>
+              <h4 className="font-semibold text-blue-700">ML/UQ Layer</h4>
+              <p className="text-xs">PyTorch, TensorFlow, MAPIE (conformal), Optuna (tuning)</p>
+            </div>
+            <div>
+              <h4 className="font-semibold text-blue-700">API Platform</h4>
+              <p className="text-xs">FastAPI, gRPC, GraphQL, Redis (caching), PostgreSQL</p>
+            </div>
+            <div>
+              <h4 className="font-semibold text-blue-700">Infrastructure</h4>
+              <p className="text-xs">Kubernetes, AWS/GCP multi-cloud, Prometheus, Grafana</p>
+            </div>
+            <div>
+              <h4 className="font-semibold text-blue-700">Security</h4>
+              <p className="text-xs">OAuth2, API keys, rate limiting, audit logs, SOC2</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-5 rounded-lg border">
+          <h3 className="font-bold text-lg mb-3">Core Algorithm Library</h3>
+          <div className="space-y-2 text-xs">
+            <div className="bg-blue-50 p-2 rounded">
+              <strong>Online Decision Making</strong>
+              <p>Ski rental, secretary problem, one-way trading, search</p>
+            </div>
+            <div className="bg-green-50 p-2 rounded">
+              <strong>Resource Management</strong>
+              <p>Caching (LRU+), paging, load balancing, autoscaling</p>
+            </div>
+            <div className="bg-purple-50 p-2 rounded">
+              <strong>Scheduling</strong>
+              <p>Non-clairvoyant, makespan, flow time optimization</p>
+            </div>
+            <div className="bg-orange-50 p-2 rounded">
+              <strong>Graph Problems</strong>
+              <p>Dynamic topological ordering, shortest paths, matching</p>
+            </div>
+            <div className="bg-pink-50 p-2 rounded">
+              <strong>Data Structures</strong>
+              <p>Learned indexes, CountSketch, frequency estimation</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-5 rounded-lg border-2 border-indigo-300">
+        <h3 className="font-bold text-lg mb-4">Key Technical Innovations</h3>
+        <div className="grid md:grid-cols-2 gap-4">
+          <div>
+            <h4 className="font-semibold text-indigo-800 mb-2">1. Brittleness Mitigation Engine</h4>
+            <ul className="text-sm space-y-1">
+              <li>• Detects brittle algorithms automatically</li>
+              <li>• Implements user-specified smoothness profiles</li>
+              <li>• Dynamic threshold adjustment</li>
+              <li>• Real-time performance monitoring</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold text-indigo-800 mb-2">2. Multi-Objective Optimizer</h4>
+            <ul className="text-sm space-y-1">
+              <li>• Balances 4+ simultaneous tradeoffs</li>
+              <li>• Pareto frontier computation</li>
+              <li>• User preference elicitation</li>
+              <li>• Adaptive parameter tuning (φ, λ)</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold text-indigo-800 mb-2">3. UQ-Aware Decision Layer</h4>
+            <ul className="text-sm space-y-1">
+              <li>• Conformal prediction integration</li>
+              <li>• Distributional advice processing</li>
+              <li>• Uncertainty-aware thresholds</li>
+              <li>• Prediction quality scoring</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold text-indigo-800 mb-2">4. Reinforcement Learning Trust Tuner</h4>
+            <ul className="text-sm space-y-1">
+              <li>• Learns optimal λ from feedback</li>
+              <li>• Context-aware trust adjustment</li>
+              <li>• Multi-armed bandit for exploration</li>
+              <li>• Continuous improvement loop</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-amber-50 p-5 rounded-lg border-l-4 border-amber-500">
+        <h3 className="font-bold mb-2">Red Teaming & Failure Mode Testing</h3>
+        <p className="text-sm mb-3">Proactive adversarial testing aligned with your engineering philosophy:</p>
+        <div className="grid md:grid-cols-3 gap-3 text-sm">
+          <div className="bg-white p-3 rounded">
+            <h4 className="font-semibold mb-1">Prediction Attacks</h4>
+            <p className="text-xs">Generate adversarial predictions designed to maximize cost ratio</p>
+          </div>
+          <div className="bg-white p-3 rounded">
+            <h4 className="font-semibold mb-1">Input Adversaries</h4>
+            <p className="text-xs">Find worst-case sequences that break smoothness guarantees</p>
+          </div>
+          <div className="bg-white p-3 rounded">
+            <h4 className="font-semibold mb-1">Brittleness Fuzzing</h4>
+            <p className="text-xs">Test with ε→0 errors to detect sudden degradation</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderRoadmap = () => (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold">18-Month Execution Roadmap</h2>
+
+      <div className="space-y-4">
+        <div className="border-l-4 border-blue-500 bg-blue-50 p-5 rounded-r-lg">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-bold text-lg">Months 0-3: Foundation</h3>
+            <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm">Q1</span>
+          </div>
+          <div className="grid md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <h4 className="font-semibold mb-2">Technical</h4>
+              <ul className="space-y-1">
+                <li>✓ Implement 5 core LAA algorithms (ski rental, caching, one-way trading, scheduling, search)</li>
+                <li>✓ Build UQ prediction adapter with conformal inference</li>
+                <li>✓ Create brittleness detection module</li>
+                <li>✓ Develop Python SDK + REST API</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-2">Business</h4>
+              <ul className="space-y-1">
+                <li>✓ Secure $5M seed funding (VCs: a16z, Sequoia, Index)</li>
+                <li>✓ Hire 5-person core team (2 algo experts, 2 ML eng, 1 PM)</li>
+                <li>✓ Partner with 2 academic institutions (TTIC, MIT)</li>
+                <li>✓ File 3 provisional patents</li>
+              </ul>
+            </div>
+          </div>
+          <div className="mt-3 bg-white p-3 rounded">
+            <strong className="text-blue-700">Key Milestone:</strong> Working MVP with 2 pilot customers
+          </div>
+        </div>
+
+        <div className="border-l-4 border-green-500 bg-green-50 p-5 rounded-r-lg">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-bold text-lg">Months 4-9: Market Validation</h3>
+            <span className="bg-green-600 text-white px-3 py-1 rounded-full text-sm">Q2-Q3</span>
+          </div>
+          <div className="grid md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <h4 className="font-semibold mb-2">Technical</h4>
+              <ul className="space-y-1">
+                <li>✓ Add 10 more algorithms (weighted caching, portfolio, load balancing)</li>
+                <li>✓ Build RL-based trust parameter optimizer</li>
+                <li>✓ Real-time monitoring dashboard</li>
+                <li>✓ Multi-objective tradeoff solver</li>
+                <li>✓ Red teaming test suite (1000+ adversarial cases)</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-2">Business</h4>
+              <ul className="space-y-1">
+                <li>✓ Sign 8-10 paying pilot customers ($500K-$1M each)</li>
+                <li>✓ Publish 2 papers at top conferences (NeurIPS, ICML)</li>
+                <li>✓ Grow team to 15 (add sales, marketing, support)</li>
+                <li>✓ Reach $5M ARR</li>
+              </ul>
+            </div>
+          </div>
+          <div className="mt-3 bg-white p-3 rounded">
+            <strong className="text-green-700">Key Milestone:</strong> Product-market fit in algorithmic trading
+          </div>
+        </div>
+
+        <div className="border-l-4 border-purple-500 bg-purple-50 p-5 rounded-r-lg">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-bold text-lg">Months 10-18: Scale & Expansion</h3>
+            <span className="bg-purple-600 text-white px-3 py-1 rounded-full text-sm">Q4-Q6</span>
+          </div>
+          <div className="grid md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <h4 className="font-semibold mb-2">Technical</h4>
+              <ul className="space-y-1">
+                <li>✓ Launch CloudOpt AI vertical solution</li>
+                <li>✓ Build self-serve platform (PLG motion)</li>
+                <li>✓ Add enterprise features (SSO, RBAC, audit logs)</li>
+                <li>✓ Achieve SOC2 compliance</li>
+                <li>✓ Expand to 30+ algorithms</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-2">Business</h4>
+              <ul className="space-y-1">
+                <li>✓ Raise $25M Series A</li>
+                <li>✓ Reach 50+ customers across 3 verticals</li>
+                <li>✓ $30M ARR ($2.5M MRR)</li>
+                <li>✓ Team of 50 (engineering, sales, support)</li>
+                <li>✓ Open European office</li>
+              </ul>
+            </div>
+          </div>
+          <div className="mt-3 bg-white p-3 rounded">
+            <strong className="text-purple-700">Key Milestone:</strong> Multi-vertical platform with repeatable GTM
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-gradient-to-r from-slate-100 to-slate-200 p-6 rounded-lg">
+        <h3 className="font-bold text-xl mb-4">Critical Success Factors</h3>
+        <div className="grid md:grid-cols-3 gap-4">
+          <div className="bg-white p-4 rounded-lg">
+            <div className="flex items-center gap-2 mb-2">
+              <CheckCircle className="text-green-600" size={20} />
+              <h4 className="font-semibold">Technical Excellence</h4>
+            </div>
+            <ul className="text-sm space-y-1">
+              <li>• Hire top PhD talent</li>
+              <li>• Maintain academic partnerships</li>
+              <li>• Continuous algorithm research</li>
+              <li>• Patent portfolio (20+ by Year 3)</li>
+            </ul>
+          </div>
+          <div className="bg-white p-4 rounded-lg">
+            <div className="flex items-center gap-2 mb-2">
+              <Users className="text-blue-600" size={20} />
+              <h4 className="font-semibold">Customer Obsession</h4>
+            </div>
+            <ul className="text-sm space-y-1">
+              <li>• White-glove onboarding</li>
+              <li>• Quarterly business reviews</li>
+              <li>• 24/7 enterprise support</li>
+              <li>• Co-development partnerships</li>
+            </ul>
+          </div>
+          <div className="bg-white p-4 rounded-lg">
+            <div className="flex items-center gap-2 mb-2">
+              <TrendingUp className="text-purple-600" size={20} />
+              <h4 className="font-semibold">Market Timing</h4>
+            </div>
+            <ul className="text-sm space-y-1">
+              <li>• Ride AI adoption wave</li>
+              <li>• First-mover advantage</li>
+              <li>• Land before competitors</li>
+              <li>• Build moat quickly</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-red-50 p-5 rounded-lg border-l-4 border-red-500">
+        <h3 className="font-bold mb-3 flex items-center gap-2">
+          <AlertCircle className="text-red-600" size={20} />
+          Risk Mitigation
+        </h3>
+        <div className="grid md:grid-cols-2 gap-4 text-sm">
+          <div>
+            <h4 className="font-semibold text-red-800 mb-2">Technical Risks</h4>
+            <ul className="space-y-2">
+              <li><strong>Risk:</strong> Algorithms don't scale to production
+                <br/><span className="text-xs text-gray-600">Mitigation: Rust implementation, benchmark early</span>
+              </li>
+              <li><strong>Risk:</strong> UQ predictions unreliable
+                <br/><span className="text-xs text-gray-600">Mitigation: Robust fallback, extensive testing</span>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold text-red-800 mb-2">Business Risks</h4>
+            <ul className="space-y-2">
+              <li><strong>Risk:</strong> Market too niche
+                <br/><span className="text-xs text-gray-600">Mitigation: Multi-vertical approach from Year 1</span>
+              </li>
+              <li><strong>Risk:</strong> Hyperscalers build in-house
+                <br/><span className="text-xs text-gray-600">Mitigation: Patents, partnerships, move fast</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-gradient-to-r from-emerald-500 to-teal-600 p-6 rounded-lg text-white">
+        <h3 className="font-bold text-2xl mb-2">Investment Ask: $5M Seed Round</h3>
+        <div className="grid md:grid-cols-4 gap-4 mt-4">
+          <div>
+            <p className="text-emerald-100 text-sm">Engineering</p>
+            <p className="text-2xl font-bold">$2M</p>
+            <p className="text-xs">8 engineers, infra</p>
+          </div>
+          <div>
+            <p className="text-emerald-100 text-sm">GTM</p>
+            <p className="text-2xl font-bold">$1.5M</p>
+            <p className="text-xs">Sales, marketing</p>
+          </div>
+          <div>
+            <p className="text-emerald-100 text-sm">Research</p>
+            <p className="text-2xl font-bold">$1M</p>
+            <p className="text-xs">Academic partnerships</p>
+          </div>
+          <div>
+            <p className="text-emerald-100 text-sm">Operations</p>
+            <p className="text-2xl font-bold">$500K</p>
+            <p className="text-xs">Legal, admin, misc</p>
+          </div>
+        </div>
+        <div className="mt-4 bg-emerald-700 bg-opacity-50 p-3 rounded">
+          <strong>18-Month Runway →</strong> Reach $5M ARR → Series A at $100M+ valuation
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="bg-white rounded-xl shadow-2xl overflow-hidden">
+          <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 p-6 text-white">
+            <h1 className="text-3xl font-bold mb-2">Learning-Augmented Algorithms</h1>
+            <p className="text-blue-100">Complete Business Strategy & Execution Plan</p>
+          </div>
+
+          <div className="border-b">
+            <div className="flex overflow-x-auto">
+              {tabs.map(tab => {
+                const Icon = tab.icon;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setSelectedTab(tab.id)}
+                    className={`flex items-center gap-2 px-6 py-4 font-semibold transition-colors whitespace-nowrap ${
+                      selectedTab === tab.id
+                        ? 'bg-blue-50 text-blue-600 border-b-2 border-blue-600'
+                        : 'text-gray-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    <Icon size={18} />
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="p-8">
+            {selectedTab === 'overview' && renderOverview()}
+            {selectedTab === 'gaps' && renderGaps()}
+            {selectedTab === 'products' && renderProducts()}
+            {selectedTab === 'gtm' && renderGTM()}
+            {selectedTab === 'technical' && renderTechnical()}
+            {selectedTab === 'roadmap' && renderRoadmap()}
+          </div>
+        </div>
+
+        <div className="mt-6 text-center text-sm text-gray-600">
+          <p>Last Updated: November 2025 | Confidential Business Plan</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default BusinessStrategyDashboard;
