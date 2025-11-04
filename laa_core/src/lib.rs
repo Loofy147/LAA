@@ -92,11 +92,15 @@ impl Scheduling {
         Scheduling { num_machines }
     }
 
-    pub fn decide(&self, job_lengths: Vec<u32>, _predictions: Vec<u32>) -> Vec<usize> {
-        let mut assignments = vec![0; job_lengths.len()];
+    pub fn decide(&self, job_lengths: Vec<u32>, predictions: Vec<u32>) -> Vec<usize> {
+        let mut jobs: Vec<(usize, u32)> = job_lengths.iter().map(|&x| x).enumerate().collect();
+        let mut sorted_jobs: Vec<(usize, u32)> = predictions.iter().map(|&x| x).enumerate().collect();
+        sorted_jobs.sort_by_key(|k| k.1);
+
+        let mut assignments = vec![0; jobs.len()];
         let mut machine_loads = vec![0; self.num_machines];
 
-        for i in 0..job_lengths.len() {
+        for (job_index, _) in sorted_jobs {
             let mut best_machine = 0;
             let mut min_load = u32::MAX;
             for j in 0..self.num_machines {
@@ -105,8 +109,8 @@ impl Scheduling {
                     best_machine = j;
                 }
             }
-            assignments[i] = best_machine;
-            machine_loads[best_machine] += job_lengths[i];
+            assignments[job_index] = best_machine;
+            machine_loads[best_machine] += jobs[job_index].1;
         }
         assignments
     }

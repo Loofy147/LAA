@@ -6,6 +6,29 @@ edition = "2021"
 [dependencies]
 pyo3 = { version = "0.21.0", features = ["extension-module"] }
 
+[dev-dependencies]
+criterion = "0.5"
+
+[[bench]]
+name = "ski_rental"
+harness = false
+
+[[bench]]
+name = "caching"
+harness = false
+
+[[bench]]
+name = "oneway_trading"
+harness = false
+
+[[bench]]
+name = "scheduling"
+harness = false
+
+[[bench]]
+name = "search"
+harness = false
+
 [lib]
 name = "laa_core"
-crate-type = ["cdylib"]
+crate-type = ["cdylib", "rlib"]
