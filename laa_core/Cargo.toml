@@ -1,0 +1,11 @@
+[package]
+name = "laa_core"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+pyo3 = { version = "0.21.0", features = ["extension-module"] }
+
+[lib]
+name = "laa_core"
+crate-type = ["cdylib"]
