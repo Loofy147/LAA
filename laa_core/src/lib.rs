@@ -2,10 +2,13 @@
 use pyo3::prelude::*;
 use std::collections::HashMap;
 
-/// Implements the Ski Rental algorithm.
+/// Implements the Ski Rental algorithm with an adaptive trust mechanism.
 #[pyclass]
 pub struct SkiRental {
     buy_cost: f64,
+    #[pyo3(get)]
+    trust: f64,
+    learning_rate: f64,
 }
 
 #[pymethods]
@@ -15,25 +18,50 @@ impl SkiRental {
     /// # Arguments
     ///
     /// * `buy_cost` - The cost of buying skis.
+    /// * `initial_trust` - The starting trust level (0.0 to 1.0).
+    /// * `learning_rate` - The rate at which trust is adjusted.
     #[new]
-    pub fn new(buy_cost: f64) -> Self {
-        SkiRental { buy_cost }
+    #[pyo3(signature = (buy_cost, initial_trust=0.5, learning_rate=0.1))]
+    pub fn new(buy_cost: f64, initial_trust: f64, learning_rate: f64) -> Self {
+        SkiRental {
+            buy_cost,
+            trust: initial_trust.max(0.0).min(1.0),
+            learning_rate,
+        }
     }
 
-    /// Decides whether to buy or rent skis.
+    /// Decides whether to buy or rent skis based on the internal trust level.
     ///
     /// # Arguments
     ///
     /// * `day` - The current day.
     /// * `prediction` - The predicted number of ski days.
-    /// * `trust` - A value between 0 and 1 indicating trust in the prediction.
     ///
     /// # Returns
     ///
     /// `true` to buy, `false` to rent.
-    pub fn decide(&self, day: u32, prediction: f64, trust: f64) -> bool {
-        let threshold = (1.0 - trust) * self.buy_cost + trust * prediction.min(self.buy_cost);
+    pub fn decide(&self, day: u32, prediction: f64) -> bool {
+        let threshold = (1.0 - self.trust) * self.buy_cost + self.trust * prediction.min(self.buy_cost);
         day as f64 >= threshold
+    }
+
+    /// Provides feedback to the algorithm to adjust its trust.
+    ///
+    /// # Arguments
+    ///
+    /// * `prediction` - The prediction that was used for a decision cycle.
+    /// * `actual_outcome` - The actual outcome of the cycle.
+    pub fn feedback(&mut self, prediction: f64, actual_outcome: f64) {
+        let error = (prediction - actual_outcome).abs() / self.buy_cost;
+
+        if error < 0.1 { // Very accurate
+            self.trust += self.learning_rate;
+        } else if error > 0.3 { // Inaccurate
+            self.trust -= self.learning_rate;
+        }
+
+        // Clamp trust between 0.0 and 1.0
+        self.trust = self.trust.max(0.0).min(1.0);
     }
 }
 
@@ -220,20 +248,11 @@ impl Search {
             start_index = prediction as usize;
         }
 
-        // If the prediction is near the end, it's better to start from the beginning
-        if values.len() > 10 && start_index > values.len() - 5 {
-            start_index = 0;
-        }
-
         for i in 0..values.len() {
             let index = (start_index + i) % values.len();
             if values[index] > max_value {
                 max_value = values[index];
                 best_index = index;
-            } else if values[index] == max_value {
-                if best_index > index {
-                    best_index = index
-                }
             }
         }
         best_index
