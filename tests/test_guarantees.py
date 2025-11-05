@@ -94,11 +94,52 @@ class TestCachingGuarantees:
         assert decision == False
         assert new_cache == [2, 3]
 
+    def test_item_already_in_cache(self):
+        predictions = {1: 10, 2: 5}
+        caching = laa_core.Caching(2, predictions)
+        cache = [1, 2]
+        decision, new_cache = caching.decide(1, cache)
+        assert decision == True
+        assert new_cache == [1, 2]
+
+    def test_cache_not_full(self):
+        predictions = {1: 10, 2: 5, 3: 12}
+        caching = laa_core.Caching(3, predictions)
+        cache = [1, 2]
+        decision, new_cache = caching.decide(3, cache)
+        assert decision == True
+        assert new_cache == [1, 2, 3]
+
+    def test_missing_predictions(self):
+        predictions = {3: 12} # Predictions for 1 and 2 are missing
+        caching = laa_core.Caching(2, predictions)
+        cache = [1, 2]
+        decision, new_cache = caching.decide(3, cache)
+        assert decision == False
+        assert new_cache == [2, 3] # Evicts the first item (1)
+
 class TestOnewayTradingGuarantees:
     def test_consistency(self):
         ot = laa_core.OnewayTrading(100.0)
         decision = ot.decide(110.0, 120.0, 0.5)
         assert decision == True
+
+    def test_price_below_threshold(self):
+        ot = laa_core.OnewayTrading(100.0)
+        decision = ot.decide(109.0, 120.0, 0.5)
+        assert decision == False
+
+    def test_full_trust(self):
+        ot = laa_core.OnewayTrading(100.0)
+        # Threshold should equal prediction
+        assert ot.decide(120.0, 120.0, 1.0) == True
+        assert ot.decide(119.0, 120.0, 1.0) == False
+
+    def test_zero_trust(self):
+        ot = laa_core.OnewayTrading(100.0)
+        # Threshold should equal buy_price
+        assert ot.decide(100.0, 120.0, 0.0) == True
+        assert ot.decide(99.0, 120.0, 0.0) == False
 
 class TestSchedulingGuarantees:
     def test_consistency(self):
@@ -108,6 +149,24 @@ class TestSchedulingGuarantees:
         assignments = scheduling.decide(job_lengths, predictions)
         assert assignments == [0, 1, 1]
 
+    def test_more_machines_than_jobs(self):
+        scheduling = laa_core.Scheduling(3)
+        job_lengths = [10, 20]
+        predictions = [5, 1]
+        assignments = scheduling.decide(job_lengths, predictions)
+        assert assignments == [1, 0]
+
+    def test_identical_predictions(self):
+        scheduling = laa_core.Scheduling(2)
+        job_lengths = [10, 5, 12]
+        predictions = [5, 10, 5]
+        assignments = scheduling.decide(job_lengths, predictions)
+        # Job 0 (pred 5), Job 2 (pred 5), Job 1 (pred 10)
+        # Job 0 -> Machine 0
+        # Job 2 -> Machine 1
+        # Job 1 -> Machine 0
+        assert assignments == [0, 0, 1]
+
 class TestSearchGuarantees:
     def test_consistency(self):
         search = laa_core.Search(100)
@@ -115,3 +174,24 @@ class TestSearchGuarantees:
         prediction = 4
         best_index = search.decide(values, prediction)
         assert best_index == 4
+
+    def test_prediction_out_of_bounds(self):
+        search = laa_core.Search(100)
+        values = [10, 20, 30]
+        prediction = 10
+        best_index = search.decide(values, prediction)
+        assert best_index == 2
+
+    def test_highest_value_before_prediction(self):
+        search = laa_core.Search(100)
+        values = [50, 10, 20]
+        prediction = 1
+        best_index = search.decide(values, prediction)
+        assert best_index == 0
+
+    def test_duplicate_values(self):
+        search = laa_core.Search(100)
+        values = [10, 50, 20, 50]
+        prediction = 3
+        best_index = search.decide(values, prediction)
+        assert best_index == 1
