@@ -148,7 +148,7 @@ impl Search {
 }
 
 #[pymodule]
-fn laa_core(_py: Python, m: &PyModule) -> PyResult<()> {
+fn laa_core(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<SkiRental>()?;
     m.add_class::<Caching>()?;
     m.add_class::<OnewayTrading>()?;
