@@ -79,19 +79,19 @@ impl Caching {
 
         if new_cache.len() < self.cache_size {
             new_cache.push(item);
-            return (false, new_cache);
+            return (true, new_cache);
         }
 
-        let mut evict_item_index = 0;
+        let mut evict_item = 0;
         let mut max_prediction = 0;
         for i in 0..new_cache.len() {
-            let prediction = self.predictions.get(&new_cache[i]).unwrap_or(&u32::MAX);
+            let prediction = self.predictions.get(&new_cache[i]).unwrap_or(&0);
             if *prediction > max_prediction {
                 max_prediction = *prediction;
-                evict_item_index = i;
+                evict_item = i;
             }
         }
-        new_cache.remove(evict_item_index);
+        new_cache.remove(evict_item);
         new_cache.push(item);
         (false, new_cache)
     }
@@ -225,6 +225,11 @@ impl Search {
             if values[index] > max_value {
                 max_value = values[index];
                 best_index = index;
+            } else if values[index] == max_value {
+                // Tie-break by choosing the smaller index
+                if index < best_index {
+                    best_index = index;
+                }
             }
         }
         best_index
