@@ -7,10 +7,15 @@ from sklearn.datasets import make_regression
 
 class UQPredictionAdapter:
     """
-    Wraps a scikit-learn compatible regressor to provide uncertainty quantification.
+    Wraps a scikit-learn compatible regressor to provide Uncertainty Quantification (UQ).
 
-    This class uses conformal prediction to generate prediction intervals, giving a
-    measure of confidence in the model's predictions.
+    This adapter uses Split Conformal Prediction, a distribution-free method for
+    generating statistically rigorous prediction intervals. For a given confidence level,
+    the true value is guaranteed to lie within the prediction interval with a high
+    probability. This is crucial for Learning-Augmented Algorithms, as the uncertainty
+    can be used to modulate the `trust` parameter or inform algorithmic decisions.
+
+    The implementation relies on the `mapie` library.
     """
 
     def __init__(self, base_predictor=LinearRegression(), confidence_level=0.95):
@@ -18,8 +23,12 @@ class UQPredictionAdapter:
         Initializes the UQPredictionAdapter.
 
         Args:
-            base_predictor: A scikit-learn compatible regressor.
-            confidence_level: The desired confidence level for the prediction intervals.
+            base_predictor: An unfitted scikit-learn compatible regressor instance. This
+                model will be trained on a subset of the data provided to `fit`.
+            confidence_level (float): The desired confidence level for the prediction
+                intervals, typically between 0.0 and 1.0. For example, 0.95 means
+                the generated intervals are expected to contain the true value 95%
+                of the time.
         """
         self.conformalizer = SplitConformalRegressor(
             estimator=base_predictor,
@@ -29,11 +38,16 @@ class UQPredictionAdapter:
 
     def fit(self, X, y):
         """
-        Fits the conformal regressor to the data.
+        Fits the underlying regressor and calibrates the conformalizer.
+
+        The method splits the provided data into three sets: one for training the
+        base predictor, one for calibrating the conformal prediction method (to
+        determine the interval width), and a dummy test set (as required by the
+        `mapie` utility function).
 
         Args:
-            X: The input features.
-            y: The target values.
+            X (np.ndarray): The input features of shape `(n_samples, n_features)`.
+            y (np.ndarray): The target values of shape `(n_samples,)`.
         """
         (
             X_train, X_conformalize, self.X_test_dummy,
@@ -45,14 +59,19 @@ class UQPredictionAdapter:
 
     def predict(self, X):
         """
-        Makes predictions with uncertainty intervals.
+        Makes predictions with calibrated uncertainty intervals.
 
         Args:
-            X: The input features for which to make predictions.
+            X (np.ndarray): The input features for which to make predictions, with
+                shape `(n_samples, n_features)`.
 
         Returns:
-            A dictionary containing the point prediction, lower and upper bounds of
-            the prediction interval, and the uncertainty (width of the interval).
+            dict: A dictionary containing the prediction results:
+                'point' (np.ndarray): The point predictions (median of the interval).
+                'lower' (np.ndarray): The lower bounds of the prediction intervals.
+                'upper' (np.ndarray): The upper bounds of the prediction intervals.
+                'uncertainty' (np.ndarray): The widths of the prediction intervals
+                    (`upper` - `lower`).
         """
         y_pred, intervals = self.conformalizer.predict_interval(X)
         return {
@@ -64,7 +83,25 @@ class UQPredictionAdapter:
 
 if __name__ == '__main__':
     X, y = make_regression(n_samples=105, n_features=1, noise=10.0, random_state=42)
-    adapter = UQPredictionAdapter()
+    adapter = UQPredictionAdapter(confidence_level=0.9)
     adapter.fit(X, y)
     predictions = adapter.predict(adapter.X_test_dummy)
-    print(predictions)
+
+    print("Uncertainty Quantification Example:")
+    print(f"Confidence Level: {adapter.conformalizer.confidence_level}")
+    print(f"Number of test samples: {len(adapter.y_test_dummy)}")
+
+    in_interval = np.sum(
+        (adapter.y_test_dummy >= predictions['lower']) & (adapter.y_test_dummy <= predictions['upper'])
+    )
+    coverage = in_interval / len(adapter.y_test_dummy)
+    print(f"Empirical Coverage: {coverage:.2f}")
+
+    print("\nSample Predictions:")
+    for i in range(min(5, len(adapter.y_test_dummy))):
+        print(
+            f"  - True: {adapter.y_test_dummy[i]:.2f}, "
+            f"Pred: {predictions['point'][i]:.2f}, "
+            f"Interval: [{predictions['lower'][i]:.2f}, {predictions['upper'][i]:.2f}], "
+            f"Uncertainty: {predictions['uncertainty'][i]:.2f}"
+        )

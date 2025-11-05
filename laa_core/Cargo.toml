@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 pyo3 = { version = "0.24.1", features = ["extension-module"] }
+rand = "0.8.5"
 
 [dev-dependencies]
 criterion = "0.5"

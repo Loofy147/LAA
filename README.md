@@ -1,22 +1,22 @@
-# Learning-Augmented Algorithms Venture
+# Learning-Augmented Algorithms (LAA) Core Library & Tools
 
-This repository contains the business plan, technical roadmap, and supporting documentation for a new venture focused on Learning-Augmented Algorithms (LAA).
+This repository contains a high-performance Rust-based core library of Learning-Augmented Algorithms (LAA) with Python bindings, alongside a suite of Python tools for analyzing and deploying them.
 
-## Project Overview
+## Project Purpose
 
-The core of this project is a business plan to commercialize recent breakthroughs in LAA. The venture will create a platform that allows companies to integrate machine learning predictions into their algorithms while maintaining worst-case performance guarantees.
+The goal of this project is to provide a practical and robust implementation of Learning-Augmented Algorithms. These algorithms combine the theoretical worst-case guarantees of classical algorithms with the real-world performance benefits of machine learning predictions. This library allows developers to build systems that are both fast on average (when predictions are good) and resilient to failure (when predictions are bad).
 
 ## Getting Started
 
-To get started with the LAA platform, you'll need to set up the backend services and familiarize yourself with the available tools and SDKs.
+To get started with the LAA library and tools, you'll need to set up your environment and build the Rust core.
 
 ### Prerequisites
 
-- Python 3.8+
-- Rust (latest stable version)
-- An API key for the LAA Platform
+*   Python 3.8+
+*   Rust (latest stable version, install via [rustup](https://rustup.rs/))
+*   `pip` and `venv` for Python package management
 
-### Installation
+### Installation & Setup
 
 1.  **Clone the repository:**
     ```bash
@@ -24,70 +24,99 @@ To get started with the LAA platform, you'll need to set up the backend services
     cd laa-venture
     ```
 
-2.  **Install Python dependencies:**
+2.  **Set up a Python virtual environment:**
     ```bash
-    pip install -r api/requirements.txt
+    python -m venv venv
+    source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
     ```
 
-3.  **Build the Rust core:**
+3.  **Install Python dependencies:**
+    ```bash
+    pip install numpy
+    ```
+
+4.  **Build the Rust core library:**
+    This command compiles the Rust code into a Python module.
     ```bash
     cd laa_core
     cargo build --release
     cd ..
     ```
 
-4.  **Install the SDK:**
+5.  **Copy the compiled library to the root directory:**
+    This makes the `laa_core` module importable by Python scripts in the root of the project.
     ```bash
-    cd sdk
-    pip install .
-    cd ..
+    cp laa_core/target/release/liblaa_core.so ./laa_core.so
     ```
 
-### Running the API
+6.  **Set the `PYTHONPATH`:**
+    This allows Python to find the modules in the `laa_tools` directory.
+    ```bash
+    export PYTHONPATH=$PYTHONPATH:$(pwd)
+    ```
 
-To start the FastAPI server, run the following command from the root directory:
+### Running Tests
+
+To verify that everything is set up correctly, run the Rust tests:
 ```bash
-uvicorn api.main:app --reload
+cd laa_core && cargo test && cd ..
 ```
 
-## Usage
+## Core Algorithms (`laa_core`)
 
-### API
+The core of the project is a Rust library with Python bindings that provides several LAA implementations.
 
-The API provides several endpoints for applying learning-augmented algorithms to common problems. You can interact with the API directly or use the Python SDK.
+### Usage from Python
 
-**Example: Ski Rental Decision**
-```bash
-curl -X POST "http://127.0.0.1:8000/algorithms/ski-rental/decide" \
--H "Content-Type: application/json" \
--d '{
-    "buy_cost": 100,
-    "current_day": 10,
-    "prediction_days": 25,
-    "trust": 0.8
-}'
-```
+After building and copying the library, you can import and use the algorithms in your Python code:
 
-### Python SDK
-
-The `laa_sdk` provides a convenient way to interact with the API from your Python applications.
-
-**Example: Ski Rental Decision with the SDK**
 ```python
-from laa_sdk import LAAClient
+from laa_core import SkiRental, RandomizedSkiRental, Caching, OnewayTrading, Scheduling, Search
 
-client = LAAClient(api_url="http://127.0.0.1:8000", api_key="your-api-key")
+# Example: Using the deterministic SkiRental algorithm
+ski_rental = SkiRental(buy_cost=100.0)
+decision = ski_rental.decide(day=25, prediction=30.0, trust=0.8)
+print(f"Should buy skis? {decision}")
 
-decision = client.ski_rental_decide(
-    buy_cost=100,
-    current_day=10,
-    prediction_days=25,
-    trust=0.8
-)
+# Example: Using the randomized SkiRental algorithm
+rand_ski_rental = RandomizedSkiRental(buy_cost=100.0)
+decision = rand_ski_rental.decide(day=25, prediction=30.0, trust=0.8)
+print(f"Should buy skis (randomized)? {decision}")
+```
 
-print(decision)
+### Implemented Algorithms
+
+*   **`SkiRental`**: The classic online problem of deciding when to buy skis versus continuing to rent. This version uses a prediction of the total number of ski days.
+*   **`RandomizedSkiRental`**: A probabilistic version of the Ski Rental algorithm that can achieve a better worst-case competitive ratio.
+*   **`Caching`**: A learning-augmented caching algorithm that uses predictions of the next access time for each item to make smarter eviction decisions.
+*   **`OnewayTrading`**: An algorithm for deciding the best time to trade one asset for another, based on a prediction of the future price.
+*   **`Scheduling`**: An algorithm for scheduling jobs on multiple machines to minimize the makespan, using predictions of job lengths.
+*   **`Search`**: A simple algorithm for finding the maximum value in a list, using a prediction of the index of the maximum value as a starting point.
+
+## Python Tools (`laa_tools`)
+
+This project also includes a set of Python tools for working with LAA.
+
+### `BrittlenessDetector`
+
+Analyzes how sensitive an algorithm is to noisy predictions.
+
+```python
+from laa_tools.brittleness_detector import BrittlenessDetector
+# (See laa_tools/brittleness_detector.py for a complete usage example)
+```
+
+### `UQPredictionAdapter`
+
+Wraps a scikit-learn model to provide uncertainty quantification for its predictions using conformal prediction.
+
+```python
+from laa_tools.uq_prediction_adapter import UQPredictionAdapter
+# (See laa_tools/uq_prediction_adapter.py for a complete usage example)
 ```
 
 ## Key Documents
 
-*   **[Project Overview](project_overview.md)**: A unified document that synthesizes the business strategy, 90-day launch plan, technical roadmap, and a primer on LAA.
+*   **[Technical Deep Dive & Gap Analysis](laa_technical_deepdive.md)**: A detailed analysis of the technical gaps in the LAA space.
+*   **[Gaps & Improvements Report](gaps-reports.md)**: A report on the new gaps identified and filled during the latest round of improvements.
+*   **[Project Overview](project_overview.md)**: The original high-level project overview.
