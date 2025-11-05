@@ -2,11 +2,36 @@
 import numpy as np
 
 class BrittlenessDetector:
+    """
+    Analyzes the brittleness of a learning-augmented algorithm.
+
+    This class assesses how the performance of an algorithm degrades as noise is
+    introduced into the predictions it relies on.
+    """
+
     def __init__(self, algorithm, problem_generator):
+        """
+        Initializes the BrittlenessDetector.
+
+        Args:
+            algorithm: The learning-augmented algorithm to be analyzed.
+            problem_generator: An object that generates problem instances.
+        """
         self.algorithm = algorithm
         self.problem_generator = problem_generator
 
     def analyze(self, num_trials=100, epsilons=None):
+        """
+        Performs the brittleness analysis.
+
+        Args:
+            num_trials: The number of random problem instances to generate.
+            epsilons: A list of noise levels to test.
+
+        Returns:
+            A dictionary where keys are the epsilon values (noise levels) and
+            values are the average performance ratios at those noise levels.
+        """
         if epsilons is None:
             epsilons = np.logspace(-6, -1, 6)
 
