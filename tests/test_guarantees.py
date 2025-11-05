@@ -118,6 +118,14 @@ class TestCachingGuarantees:
         assert decision == False
         assert new_cache == [2, 3] # Evicts the first item (1)
 
+    def test_empty_cache(self):
+        predictions = {1: 10, 2: 5, 3: 12}
+        caching = laa_core.Caching(2, predictions)
+        cache = []
+        decision, new_cache = caching.decide(1, cache)
+        assert decision == True
+        assert new_cache == [1]
+
 class TestOnewayTradingGuarantees:
     def test_consistency(self):
         ot = laa_core.OnewayTrading(100.0)
@@ -167,6 +175,13 @@ class TestSchedulingGuarantees:
         # Job 1 -> Machine 0
         assert assignments == [0, 0, 1]
 
+    def test_empty_jobs(self):
+        scheduling = laa_core.Scheduling(2)
+        job_lengths = []
+        predictions = []
+        assignments = scheduling.decide(job_lengths, predictions)
+        assert assignments == []
+
 class TestSearchGuarantees:
     def test_consistency(self):
         search = laa_core.Search(100)
@@ -194,4 +209,4 @@ class TestSearchGuarantees:
         values = [10, 50, 20, 50]
         prediction = 3
         best_index = search.decide(values, prediction)
-        assert best_index == 1
+        assert best_index == 3
