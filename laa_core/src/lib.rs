@@ -2,6 +2,7 @@
 use pyo3::prelude::*;
 use std::collections::HashMap;
 
+/// Implements the Ski Rental algorithm.
 #[pyclass]
 pub struct SkiRental {
     buy_cost: f64,
@@ -9,17 +10,34 @@ pub struct SkiRental {
 
 #[pymethods]
 impl SkiRental {
+    /// Creates a new SkiRental instance.
+    ///
+    /// # Arguments
+    ///
+    /// * `buy_cost` - The cost of buying skis.
     #[new]
     pub fn new(buy_cost: f64) -> Self {
         SkiRental { buy_cost }
     }
 
+    /// Decides whether to buy or rent skis.
+    ///
+    /// # Arguments
+    ///
+    /// * `day` - The current day.
+    /// * `prediction` - The predicted number of ski days.
+    /// * `trust` - A value between 0 and 1 indicating trust in the prediction.
+    ///
+    /// # Returns
+    ///
+    /// `true` to buy, `false` to rent.
     pub fn decide(&self, day: u32, prediction: f64, trust: f64) -> bool {
         let threshold = (1.0 - trust) * self.buy_cost + trust * prediction.min(self.buy_cost);
         day as f64 >= threshold
     }
 }
 
+/// Implements a caching algorithm.
 #[pyclass]
 pub struct Caching {
     cache_size: usize,
@@ -28,6 +46,12 @@ pub struct Caching {
 
 #[pymethods]
 impl Caching {
+    /// Creates a new Caching instance.
+    ///
+    /// # Arguments
+    ///
+    /// * `cache_size` - The maximum size of the cache.
+    /// * `predictions` - A map of item IDs to their predicted future access times.
     #[new]
     pub fn new(cache_size: usize, predictions: HashMap<u32, u32>) -> Self {
         Caching {
@@ -36,6 +60,17 @@ impl Caching {
         }
     }
 
+    /// Decides whether an item is a cache hit or miss and updates the cache.
+    ///
+    /// # Arguments
+    ///
+    /// * `item` - The item being accessed.
+    /// * `cache` - The current state of the cache.
+    ///
+    /// # Returns
+    ///
+    /// A tuple containing a boolean indicating a hit (`true`) or miss (`false`),
+    /// and the new state of the cache.
     pub fn decide(&self, item: u32, cache: Vec<u32>) -> (bool, Vec<u32>) {
         let mut new_cache = cache.clone();
         if new_cache.contains(&item) {
@@ -62,6 +97,7 @@ impl Caching {
     }
 }
 
+/// Implements the Oneway Trading algorithm.
 #[pyclass]
 pub struct OnewayTrading {
     buy_price: f64,
@@ -69,17 +105,34 @@ pub struct OnewayTrading {
 
 #[pymethods]
 impl OnewayTrading {
+    /// Creates a new OnewayTrading instance.
+    ///
+    /// # Arguments
+    ///
+    /// * `buy_price` - The initial price of the asset.
     #[new]
     pub fn new(buy_price: f64) -> Self {
         OnewayTrading { buy_price }
     }
 
+    /// Decides whether to buy or wait.
+    ///
+    /// # Arguments
+    ///
+    /// * `current_price` - The current price of the asset.
+    /// * `prediction` - The predicted future price of the asset.
+    /// * `trust` - A value between 0 and 1 indicating trust in the prediction.
+    ///
+    /// # Returns
+    ///
+    /// `true` to buy, `false` to wait.
     pub fn decide(&self, current_price: f64, prediction: f64, trust: f64) -> bool {
         let threshold = (1.0 - trust) * self.buy_price + trust * prediction;
         current_price >= threshold
     }
 }
 
+/// Implements a scheduling algorithm.
 #[pyclass]
 pub struct Scheduling {
     num_machines: usize,
@@ -87,11 +140,26 @@ pub struct Scheduling {
 
 #[pymethods]
 impl Scheduling {
+    /// Creates a new Scheduling instance.
+    ///
+    /// # Arguments
+    ///
+    /// * `num_machines` - The number of machines available for scheduling.
     #[new]
     pub fn new(num_machines: usize) -> Self {
         Scheduling { num_machines }
     }
 
+    /// Assigns jobs to machines.
+    ///
+    /// # Arguments
+    ///
+    /// * `job_lengths` - A list of the actual lengths of the jobs.
+    /// * `predictions` - A list of the predicted lengths of the jobs.
+    ///
+    /// # Returns
+    ///
+    /// A list of machine assignments for each job.
     pub fn decide(&self, job_lengths: Vec<u32>, predictions: Vec<u32>) -> Vec<usize> {
         let mut jobs: Vec<(usize, u32)> = job_lengths.iter().map(|&x| x).enumerate().collect();
         let mut sorted_jobs: Vec<(usize, u32)> = predictions.iter().map(|&x| x).enumerate().collect();
@@ -116,6 +184,7 @@ impl Scheduling {
     }
 }
 
+/// Implements a search algorithm.
 #[pyclass]
 pub struct Search {
     max_value: u32,
@@ -123,11 +192,26 @@ pub struct Search {
 
 #[pymethods]
 impl Search {
+    /// Creates a new Search instance.
+    ///
+    /// # Arguments
+    ///
+    /// * `max_value` - The maximum possible value in the search space.
     #[new]
     pub fn new(max_value: u32) -> Self {
         Search { max_value }
     }
 
+    /// Finds the index of the best value in a list.
+    ///
+    /// # Arguments
+    ///
+    /// * `values` - The list of values to search through.
+    /// * `prediction` - The predicted index of the best value.
+    ///
+    /// # Returns
+    ///
+    /// The index of the best value found.
     pub fn decide(&self, values: Vec<u32>, prediction: u32) -> usize {
         let mut best_index = 0;
         let mut max_value = 0;
@@ -147,8 +231,9 @@ impl Search {
     }
 }
 
+/// The main Python module for the LAA core library.
 #[pymodule]
-fn laa_core(_py: Python, m: &PyModule) -> PyResult<()> {
+fn laa_core(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<SkiRental>()?;
     m.add_class::<Caching>()?;
     m.add_class::<OnewayTrading>()?;

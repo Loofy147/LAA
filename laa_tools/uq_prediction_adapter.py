@@ -6,7 +6,21 @@ from sklearn.linear_model import LinearRegression
 from sklearn.datasets import make_regression
 
 class UQPredictionAdapter:
+    """
+    Wraps a scikit-learn compatible regressor to provide uncertainty quantification.
+
+    This class uses conformal prediction to generate prediction intervals, giving a
+    measure of confidence in the model's predictions.
+    """
+
     def __init__(self, base_predictor=LinearRegression(), confidence_level=0.95):
+        """
+        Initializes the UQPredictionAdapter.
+
+        Args:
+            base_predictor: A scikit-learn compatible regressor.
+            confidence_level: The desired confidence level for the prediction intervals.
+        """
         self.conformalizer = SplitConformalRegressor(
             estimator=base_predictor,
             confidence_level=confidence_level,
@@ -14,6 +28,13 @@ class UQPredictionAdapter:
         )
 
     def fit(self, X, y):
+        """
+        Fits the conformal regressor to the data.
+
+        Args:
+            X: The input features.
+            y: The target values.
+        """
         (
             X_train, X_conformalize, self.X_test_dummy,
             y_train, y_conformalize, self.y_test_dummy
@@ -23,6 +44,16 @@ class UQPredictionAdapter:
         self.conformalizer.fit(X_train, y_train).conformalize(X_conformalize, y_conformalize)
 
     def predict(self, X):
+        """
+        Makes predictions with uncertainty intervals.
+
+        Args:
+            X: The input features for which to make predictions.
+
+        Returns:
+            A dictionary containing the point prediction, lower and upper bounds of
+            the prediction interval, and the uncertainty (width of the interval).
+        """
         y_pred, intervals = self.conformalizer.predict_interval(X)
         return {
             'point': y_pred,
