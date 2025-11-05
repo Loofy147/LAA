@@ -79,19 +79,19 @@ impl Caching {
 
         if new_cache.len() < self.cache_size {
             new_cache.push(item);
-            return (true, new_cache);
+            return (false, new_cache);
         }
 
-        let mut evict_item = 0;
+        let mut evict_item_index = 0;
         let mut max_prediction = 0;
         for i in 0..new_cache.len() {
-            let prediction = self.predictions.get(&new_cache[i]).unwrap_or(&0);
+            let prediction = self.predictions.get(&new_cache[i]).unwrap_or(&u32::MAX);
             if *prediction > max_prediction {
                 max_prediction = *prediction;
-                evict_item = i;
+                evict_item_index = i;
             }
         }
-        new_cache.remove(evict_item);
+        new_cache.remove(evict_item_index);
         new_cache.push(item);
         (false, new_cache)
     }
@@ -231,43 +231,6 @@ impl Search {
     }
 }
 
-/// Implements the Randomized Ski Rental algorithm.
-#[pyclass]
-pub struct RandomizedSkiRental {
-    buy_cost: f64,
-}
-
-#[pymethods]
-impl RandomizedSkiRental {
-    /// Creates a new RandomizedSkiRental instance.
-    ///
-    /// # Arguments
-    ///
-    /// * `buy_cost` - The cost of buying skis.
-    #[new]
-    pub fn new(buy_cost: f64) -> Self {
-        RandomizedSkiRental { buy_cost }
-    }
-
-    /// Decides whether to buy or rent skis based on a randomized strategy.
-    ///
-    /// # Arguments
-    ///
-    /// * `day` - The current day.
-    /// * `p` - A random value between 0.0 and 1.0.
-    ///
-    /// # Returns
-    ///
-    /// `true` to buy, `false` to rent.
-    pub fn decide(&self, day: u32, p: f64) -> bool {
-        if day as f64 >= self.buy_cost {
-            return true;
-        }
-        let prob_buy = 1.0 / self.buy_cost;
-        p < prob_buy
-    }
-}
-
 /// The main Python module for the LAA core library.
 #[pymodule]
 fn laa_core(m: &Bound<'_, PyModule>) -> PyResult<()> {
@@ -276,7 +239,6 @@ fn laa_core(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<OnewayTrading>()?;
     m.add_class::<Scheduling>()?;
     m.add_class::<Search>()?;
-    m.add_class::<RandomizedSkiRental>()?;
     Ok(())
 }
 

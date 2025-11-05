@@ -107,16 +107,18 @@ class TestCachingGuarantees:
         caching = laa_core.Caching(3, predictions)
         cache = [1, 2]
         decision, new_cache = caching.decide(3, cache)
-        assert decision == True
+        assert decision == False, "Adding an item to a non-full cache should be a miss."
         assert new_cache == [1, 2, 3]
 
     def test_missing_predictions(self):
-        predictions = {3: 12} # Predictions for 1 and 2 are missing
+        """Items with missing predictions should be evicted first."""
+        predictions = {2: 5} # Prediction for 1 is missing
         caching = laa_core.Caching(2, predictions)
         cache = [1, 2]
         decision, new_cache = caching.decide(3, cache)
         assert decision == False
-        assert new_cache == [2, 3] # Evicts the first item (1)
+        # Item 1 should be evicted as it has no prediction
+        assert new_cache == [2, 3], "Should evict the item with the missing prediction."
 
 class TestOnewayTradingGuarantees:
     def test_consistency(self):
