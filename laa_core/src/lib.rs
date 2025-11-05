@@ -225,11 +225,6 @@ impl Search {
             if values[index] > max_value {
                 max_value = values[index];
                 best_index = index;
-            } else if values[index] == max_value {
-                // Tie-break by choosing the smaller index
-                if index < best_index {
-                    best_index = index;
-                }
             }
         }
         best_index

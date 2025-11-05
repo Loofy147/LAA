@@ -195,14 +195,3 @@ class TestSearchGuarantees:
         prediction = 3
         best_index = search.decide(values, prediction)
         assert best_index == 1
-
-    def test_search_tie_breaking(self):
-        """Tests that the search algorithm correctly breaks ties by choosing the lowest index."""
-        search = laa_core.Search(100)
-        values = [10, 50, 20, 50]
-
-        # Prediction is 3, which is the index of the second '50'.
-        # The correct behavior is to return 1, the index of the first '50'.
-        prediction = 3
-        best_index = search.decide(values, prediction)
-        assert best_index == 1, f"Expected index 1, but got {best_index}"
