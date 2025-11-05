@@ -195,3 +195,34 @@ class TestSearchGuarantees:
         prediction = 3
         best_index = search.decide(values, prediction)
         assert best_index == 1
+
+    def test_search_brittleness(self):
+        """
+        Tests for brittleness in the Search algorithm.
+        A small error in the prediction should not lead to a drastically
+        different (and worse) result. This test creates a scenario with two
+        maximum values, one at the beginning (index 0) and one at the end (index 999).
+        A perfect prediction of 0 correctly finds the optimal value at index 0.
+        A slightly imperfect prediction of 1 causes the current algorithm to
+        start its search from index 1 and wrap around, finding the maximum value
+        at index 999 first.
+        This test asserts that the result should NOT jump drastically, which will
+        fail with the current brittle implementation.
+        """
+        search = laa_core.Search(max_value=101)
+
+        values = [100] * 1000
+        values[0] = 101
+        values[999] = 101
+
+        # A perfect prediction finds the first optimal value
+        perfect_prediction = 0
+        perfect_result = search.decide(values, perfect_prediction)
+        assert perfect_result == 0, "With a perfect prediction, the first optimal value should be found."
+
+        # A slightly imperfect prediction should not lead to a drastically different result
+        brittle_prediction = 1
+        brittle_result = search.decide(values, brittle_prediction)
+
+        # This assertion will fail, demonstrating the algorithm's brittleness.
+        assert abs(brittle_result - perfect_result) < 500, f"Algorithm is brittle: result jumped from {perfect_result} to {brittle_result}"

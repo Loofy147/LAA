@@ -220,11 +220,20 @@ impl Search {
             start_index = prediction as usize;
         }
 
+        // If the prediction is near the end, it's better to start from the beginning
+        if values.len() > 10 && start_index > values.len() - 5 {
+            start_index = 0;
+        }
+
         for i in 0..values.len() {
             let index = (start_index + i) % values.len();
             if values[index] > max_value {
                 max_value = values[index];
                 best_index = index;
+            } else if values[index] == max_value {
+                if best_index > index {
+                    best_index = index
+                }
             }
         }
         best_index
