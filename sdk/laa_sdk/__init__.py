@@ -1,6 +1,41 @@
 
 import requests
-from typing import Dict, Any, List
+from typing import Dict, List
+from pydantic import BaseModel, ValidationError
+
+# Response Models
+class DecisionResponse(BaseModel):
+    decision: str
+    algorithm: str
+    trust_parameter: float
+
+class CachingResponse(BaseModel):
+    decision: str
+    new_cache: List[int]
+    algorithm: str
+
+class SchedulingResponse(BaseModel):
+    assignments: List[int]
+    algorithm: str
+
+class SearchResponse(BaseModel):
+    best_index: int
+    algorithm: str
+
+# Custom Exceptions
+class LAAError(Exception):
+    """Base exception for the LAA SDK."""
+    pass
+
+class APIError(LAAError):
+    """Raised for non-2xx API responses."""
+    def __init__(self, status_code: int, message: str):
+        self.status_code = status_code
+        super().__init__(f"API Error {status_code}: {message}")
+
+class ClientValidationError(LAAError):
+    """Raised for client-side validation errors."""
+    pass
 
 class LAAClient:
     """
@@ -20,36 +55,53 @@ class LAAClient:
         self.session = requests.Session()
         self.session.headers.update({"X-API-Key": api_key})
 
+    def _make_request(self, method: str, endpoint: str, json_data: dict, response_model):
+        try:
+            response = self.session.request(method, f"{self.api_url}{endpoint}", json=json_data)
+            response.raise_for_status()
+            return response_model(**response.json())
+        except requests.exceptions.HTTPError as e:
+            if e.response.status_code == 422:
+                raise ClientValidationError(f"Validation Error: {e.response.text}") from e
+            raise APIError(e.response.status_code, e.response.text) from e
+        except ValidationError as e:
+            raise LAAError(f"Failed to parse API response: {e}") from e
+
     def ski_rental_decide(
         self,
         buy_cost: float,
         current_day: int,
         prediction_days: float,
         trust: float = 0.5
-    ) -> Dict[str, Any]:
+    ) -> DecisionResponse:
         """
         Makes a ski rental decision using the LAA API.
-
-        Args:
-            buy_cost: The cost of buying skis.
-            current_day: The current day number.
-            prediction_days: The predicted number of ski days.
-            trust: A value between 0 and 1 indicating trust in the prediction.
-
-        Returns:
-            A dictionary containing the API response.
         """
-        response = self.session.post(
-            f"{self.api_url}/algorithms/ski-rental/decide",
-            json={
-                "buy_cost": buy_cost,
-                "current_day": current_day,
-                "prediction_days": prediction_days,
-                "trust": trust
-            }
-        )
-        response.raise_for_status()
-        return response.json()
+        data = {
+            "buy_cost": buy_cost,
+            "current_day": current_day,
+            "prediction_days": prediction_days,
+            "trust": trust
+        }
+        return self._make_request("POST", "/algorithms/ski-rental/decide", data, DecisionResponse)
+
+    def randomized_ski_rental_decide(
+        self,
+        buy_cost: float,
+        current_day: int,
+        prediction_days: float,
+        trust: float = 0.5
+    ) -> DecisionResponse:
+        """
+        Makes a randomized ski rental decision using the LAA API.
+        """
+        data = {
+            "buy_cost": buy_cost,
+            "current_day": current_day,
+            "prediction_days": prediction_days,
+            "trust": trust
+        }
+        return self._make_request("POST", "/algorithms/randomized-ski-rental/decide", data, DecisionResponse)
 
     def caching_decide(
         self,
@@ -57,30 +109,17 @@ class LAAClient:
         predictions: Dict[int, int],
         item: int,
         cache: List[int]
-    ) -> Dict[str, Any]:
+    ) -> CachingResponse:
         """
         Makes a caching decision using the LAA API.
-
-        Args:
-            cache_size: The maximum size of the cache.
-            predictions: A map of item IDs to their predicted future access times.
-            item: The item being accessed.
-            cache: The current state of the cache.
-
-        Returns:
-            A dictionary containing the API response.
         """
-        response = self.session.post(
-            f"{self.api_url}/algorithms/caching/decide",
-            json={
-                "cache_size": cache_size,
-                "predictions": predictions,
-                "item": item,
-                "cache": cache
-            }
-        )
-        response.raise_for_status()
-        return response.json()
+        data = {
+            "cache_size": cache_size,
+            "predictions": predictions,
+            "item": item,
+            "cache": cache
+        }
+        return self._make_request("POST", "/algorithms/caching/decide", data, CachingResponse)
 
     def oneway_trading_decide(
         self,
@@ -88,83 +127,46 @@ class LAAClient:
         current_price: float,
         prediction_price: float,
         trust: float = 0.5
-    ) -> Dict[str, Any]:
+    ) -> DecisionResponse:
         """
         Makes a oneway trading decision using the LAA API.
-
-        Args:
-            buy_price: The initial price of the asset.
-            current_price: The current price of the asset.
-            prediction_price: The predicted future price of the asset.
-            trust: A value between 0 and 1 indicating trust in the prediction.
-
-        Returns:
-            A dictionary containing the API response.
         """
-        response = self.session.post(
-            f"{self.api_url}/algorithms/oneway-trading/decide",
-            json={
-                "buy_price": buy_price,
-                "current_price": current_price,
-                "prediction_price": prediction_price,
-                "trust": trust
-            }
-        )
-        response.raise_for_status()
-        return response.json()
+        data = {
+            "buy_price": buy_price,
+            "current_price": current_price,
+            "prediction_price": prediction_price,
+            "trust": trust
+        }
+        return self._make_request("POST", "/algorithms/oneway-trading/decide", data, DecisionResponse)
 
     def scheduling_decide(
         self,
         num_machines: int,
         job_lengths: List[int],
         prediction_job_lengths: List[int]
-    ) -> Dict[str, Any]:
+    ) -> SchedulingResponse:
         """
         Makes a scheduling decision using the LAA API.
-
-        Args:
-            num_machines: The number of machines available for scheduling.
-            job_lengths: A list of the actual lengths of the jobs.
-            prediction_job_lengths: A list of the predicted lengths of the jobs.
-
-        Returns:
-            A dictionary containing the API response.
         """
-        response = self.session.post(
-            f"{self.api_url}/algorithms/scheduling/decide",
-            json={
-                "num_machines": num_machines,
-                "job_lengths": job_lengths,
-                "prediction_job_lengths": prediction_job_lengths
-            }
-        )
-        response.raise_for_status()
-        return response.json()
+        data = {
+            "num_machines": num_machines,
+            "job_lengths": job_lengths,
+            "prediction_job_lengths": prediction_job_lengths
+        }
+        return self._make_request("POST", "/algorithms/scheduling/decide", data, SchedulingResponse)
 
     def search_decide(
         self,
         max_value: int,
         values: List[int],
         prediction_value: int
-    ) -> Dict[str, Any]:
+    ) -> SearchResponse:
         """
         Makes a search decision using the LAA API.
-
-        Args:
-            max_value: The maximum possible value in the search space.
-            values: The list of values to search through.
-            prediction_value: The predicted index of the best value.
-
-        Returns:
-            A dictionary containing the API response.
         """
-        response = self.session.post(
-            f"{self.api_url}/algorithms/search/decide",
-            json={
-                "max_value": max_value,
-                "values": values,
-                "prediction_value": prediction_value
-            }
-        )
-        response.raise_for_status()
-        return response.json()
+        data = {
+            "max_value": max_value,
+            "values": values,
+            "prediction_value": prediction_value
+        }
+        return self._make_request("POST", "/algorithms/search/decide", data, SearchResponse)
