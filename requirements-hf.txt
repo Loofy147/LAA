@@ -1,6 +1,4 @@
 
-fastapi
-uvicorn
 gradio==4.19.1
 pandas
 huggingface_hub
