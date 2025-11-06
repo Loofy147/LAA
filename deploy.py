@@ -8,7 +8,7 @@ REPO_NAME = "laa-algorithms-demo"
 FILES_TO_UPLOAD = [
     "app.py",
     "requirements.txt",
-    "packages.txt",
+    "Dockerfile",
     "laa_core/src/lib.rs",
     "laa_core/Cargo.toml",
     "laa_core/Cargo.lock",
@@ -43,7 +43,7 @@ def deploy_to_hf_spaces(token):
     api.create_repo(
         repo_id=repo_id,
         repo_type="space",
-        space_sdk="gradio",
+        space_sdk="docker",
         exist_ok=True,
     )
 

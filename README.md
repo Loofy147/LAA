@@ -4,9 +4,8 @@ title: LAA Algorithms Demo
 emoji: 🚀
 colorFrom: blue
 colorTo: green
-sdk: gradio
-python_version: 3.9
-app_file: app.py
+sdk: docker
+app_port: 7860
 ---
 
 ## LAA Algorithms Demo
@@ -15,4 +14,4 @@ This Space demonstrates a collection of Learning-Augmented Algorithms (LAA). You
 
 ### Setup
 
-This Space is configured to use the Gradio SDK and will automatically install the dependencies from the `requirements.txt` file and the packages from the `packages.txt` file. The `laa_core` Rust library is built and installed as part of the setup process.
+This Space is configured to use a custom Docker environment defined in the `Dockerfile`.
