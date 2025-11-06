@@ -1,5 +1,5 @@
 
-gradio==4.19.1
+gradio==5.31.0
 pandas
 huggingface_hub
 requests
