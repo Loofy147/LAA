@@ -8,6 +8,7 @@ REPO_NAME = "laa-algorithms-demo"
 FILES_TO_UPLOAD = [
     "app.py",
     "requirements.txt",
+    "packages.txt",
     "laa_core/src/lib.rs",
     "laa_core/Cargo.toml",
     "laa_core/Cargo.lock",

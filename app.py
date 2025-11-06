@@ -5,21 +5,30 @@ import pandas as pd
 
 def ski_rental_fn(buy_cost, current_day, prediction_days, trust, randomized=False):
     """Function to call the ski rental algorithm and format the output."""
-    if randomized:
-        algo = laa_core.RandomizedSkiRental(buy_cost)
-        algo_name = "Randomized Ski Rental"
-    else:
-        algo = laa_core.SkiRental(buy_cost)
-        algo_name = "Deterministic Ski Rental"
+    try:
+        # Explicitly cast inputs to the correct types
+        buy_cost = float(buy_cost)
+        current_day = int(current_day)
+        prediction_days = float(prediction_days)
+        trust = float(trust)
 
-    decision = algo.decide(current_day, prediction_days, trust)
-    decision_str = "Buy" if decision else "Rent"
+        if randomized:
+            algo = laa_core.RandomizedSkiRental(buy_cost)
+            algo_name = "Randomized Ski Rental"
+        else:
+            algo = laa_core.SkiRental(buy_cost)
+            algo_name = "Deterministic Ski Rental"
 
-    return pd.DataFrame({
-        "Algorithm": [algo_name],
-        "Decision": [decision_str],
-        "Trust in Prediction": [trust]
-    })
+        decision = algo.decide(current_day, prediction_days, trust)
+        decision_str = "Buy" if decision else "Rent"
+
+        return pd.DataFrame({
+            "Algorithm": [algo_name],
+            "Decision": [decision_str],
+            "Trust in Prediction": [trust]
+        })
+    except Exception as e:
+        return pd.DataFrame({"Error": [str(e)]})
 
 with gr.Blocks(title="LAA Algorithms Demo") as demo:
     gr.Markdown("# Learning-Augmented Algorithms Demo")
