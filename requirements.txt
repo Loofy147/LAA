@@ -1,0 +1,8 @@
+
+fastapi
+uvicorn
+gradio
+pandas
+huggingface_hub
+requests
+pydantic
